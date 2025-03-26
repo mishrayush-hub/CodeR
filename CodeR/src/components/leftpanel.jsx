@@ -5,22 +5,20 @@ import { useLocation } from 'react-router-dom';
 
 function LeftPanel({ joiners , socketId, onClientSelect, clientSocketid }) {
     const [joinees, setJoiners] = useState([]);
-    const location = useLocation();
 
       useEffect(() => {
         setJoiners(joiners);
-        console.log(socketId);
       }, [joiners]);
     return (
-    <div className="w-1/5 bg-gray-800 p-4 border-r border-gray-700">
-        <h1 className="text-3xl font-semibold mb-4">CodeR</h1>
+    <div className="min-w-[200px] h-screen bg-gray-800 p-2 border-r border-gray-700">
+        {/* <h1 className="text-3xl font-semibold mb-4">CodeR</h1> */}
           <h2 className="text-xl font-semibold mb-4">Joiners</h2>
           <div className="space-y-2">
             {joinees.map((joiner) => (
               <div 
                 key={joiner.socketId} 
                 onClick= {() => onClientSelect(joiner)}
-                className={`p-2 rounded ${
+                className={`p-1 pl-3 rounded ${
                   joiner.socketId === socketId
                     ? 'bg-green-600' 
                     : 'bg-yellow-600'

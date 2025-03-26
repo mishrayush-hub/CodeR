@@ -17,6 +17,8 @@ const io = new Server(server, {
 const hosts = {};
 const userSocketMap = {};
 const clientCodes = new Map();
+let client = null;
+
 function getAllConnectedClients(roomId) {
     return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map((socketId) => {
         return {
@@ -44,13 +46,13 @@ io.on("connection", (socket) => {
     console.log("Socket connected:", socket.id);
 
     socket.on("join", ({ roomId, username, hostname }) => {
-        console.log("🔌 Socket Join Event:", { 
-            socketId: socket.id, 
-            roomId, 
-            username, 
-            hostname,
-            existingHosts: Object.keys(hosts)
-        });
+        // console.log("🔌 Socket Join Event:", { 
+        //     socketId: socket.id, 
+        //     roomId, 
+        //     username, 
+        //     hostname,
+        //     existingHosts: Object.keys(hosts)
+        // });
 
         // Check if this socket is already in the room
         if (socket.rooms.has(roomId)) {
@@ -72,10 +74,10 @@ io.on("connection", (socket) => {
         else {
             userSocketMap[socket.id] = username;
         }
-        console.log(`${username || hostname} joined room ${roomId}`);
+        // console.log(`${username || hostname} joined room ${roomId}`);
         socket.join(roomId);
         const clients = getAllConnectedClients(roomId);
-        console.log(clients);
+        // console.log(clients);
         clients.forEach(({ socketId }) => {
             io.to(socketId).emit('joined', {
                 clients,
@@ -86,11 +88,17 @@ io.on("connection", (socket) => {
         socket.to(roomId).emit("NEW_USER", `${username} has joined!`);
     });
 
+    
+    
+    //editor code sync
     socket.on('code_changed', ({ roomId, code, socketid }) => {
         const host = getHostId(roomId);
 
         clientCodes.set(socketid, code);
-        console.log(clientCodes);
+        if(client === socketid) {
+            io.to(host.socketId).emit('client_codes', { code, socketid });
+        };
+        // console.log(clientCodes);
 
         // if(host) {
         //     io.to(host.socketId).emit('code_changed', { code, socketid });
@@ -100,45 +108,44 @@ io.on("connection", (socket) => {
          
     });
 
-    socket.on('request_clientcode', ({ roomId, targetSocketid, requesterSocketId }) => {
-        console.log("🔍 DETAILED REQUEST CLIENT CODE:", { 
-            requestingSocketId: socket.id, 
-            requesterSocketId,
-            roomId, 
-            targetSocketid 
-        });
+    //teacher_edit
+    socket.on('teacher_edit', ({ roomId, code, socketid }) => {
+        io.to(client).emit('client_codes', { code, socketid });
+    });
 
+    //teacher emitting student
+    socket.on('teacher_emit', ({ roomId, code, socketid }) => {
+        socket.to(roomId).emit('broad_cast', { code, socketid });
+    });
+
+
+    
+    //requesting feature teacher-student
+    socket.on('request_clientcode', ({ roomId, targetSocketid, requesterSocketId }) => {
         // Verify room existence
         const roomClients = io.sockets.adapter.rooms.get(roomId);
         if (!roomClients) {
             console.error("❌ Room does not exist:", roomId);
             return;
         }
-
+    
         // Find the current host for the room
         const host = getHostId(roomId);
-        console.log("🏠 Host Details:", host);
-
+        
         // Verify host and request origin
         const isValidHostRequest = host && 
             (host.socketId === socket.id || host.socketId === requesterSocketId);
-
+    
         if (isValidHostRequest) {
-            const codee = clientCodes.get(targetSocketid) || '';
-
-            console.log("📤 Preparing Code Emission:", { 
-                hostSocketId: host.socketId,
-                targetSocketid,
-                codeLength: codee.length
+            // Get the code of the specific client only
+            client = targetSocketid;
+            const clientCode = clientCodes.get(targetSocketid) || 'No code available';
+    
+            // Emit ONLY the selected client's code to the requester (host)
+            io.to(host.socketId).emit('client_codes', { 
+                code: clientCode,  
+                sourceSocketId: targetSocketid  
             });
-
-            // Emit to the specific host socket
-            io.to(host.socketId).emit('code_changed', {
-                codee,
-                sourceSocketId: targetSocketid
-            });
-
-            console.log("✅ Code Emission Complete");
         } else {
             console.error("❌ Host Verification Failed", { 
                 hostSocketId: host?.socketId, 
@@ -147,15 +154,19 @@ io.on("connection", (socket) => {
             });
         }
     });
+    
 
+
+
+    //Chatting feature
     socket.on('send_chat_message', ( messageData ) => {
         socket.to(messageData.roomId).emit('receive_chat_message', {
             messageData
         });
-        console.log("📤 Chat Message Sent:", {
-            messageData,
-            timestamp: new Date().toISOString()
-        });
+        // console.log("📤 Chat Message Sent:", {
+        //     messageData,
+        //     timestamp: new Date().toISOString()
+        // });
     });
     
     socket.on("disconnecting", () => {

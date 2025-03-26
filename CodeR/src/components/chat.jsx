@@ -81,10 +81,10 @@ function Chat({ roomId, username, clientMessages, socketRef }) {
   };
 
     return (
-        <div className="w-1/5 bg-gray-900 p-4 border-l border-gray-800 flex flex-col">
+        <div className="max-w-[400px] h-screen bg-gray-900 p-2 border-l border-gray-800 flex flex-col">
     {/* Chat Header */}
-    <div className="bg-gray-900 p-3 border-b border-gray-800 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">Chat</h2>
+    <div className="bg-gray-900 p-2 border-b border-gray-800 flex items-center justify-between">
+        <h1 className="text-xl font-semibold text-white">Chat</h1>
     </div>
 
     {/* Chat Messages */}
