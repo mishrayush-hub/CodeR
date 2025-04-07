@@ -45,23 +45,23 @@ A real-time collaborative coding platform designed for virtual classrooms. Teach
 ## 🛠 Installation
 
 # Clone the repository
-git clone https://github.com/ayushmishra/teacher-student-code-classroom.git
-cd teacher-student-code-classroom
+git clone https://github.com/mishrayush-hub/CodeR.git
+cd Class-editor
 
 # Install backend dependencies
-cd server
+cd CodeRserver
 npm install
 
 # Install frontend dependencies
-cd ../client
+cd CodeR
 npm install
 
 # Start the backend server
-cd ../server
+cd CodeRServer
 npm run dev
 
 # Start the frontend app
-cd ../client
+cd CodeR
 npm start
 
 ---
