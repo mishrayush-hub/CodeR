@@ -35,10 +35,10 @@ A real-time collaborative coding platform designed for virtual classrooms. Teach
 
 ## 📸 Screenshots
 
-![Screenshot from 2025-03-26 02-43-37](https://github.com/user-attachments/assets/d6522b77-510a-4419-a385-5356e2e9f821)
-![Screenshot from 2025-03-26 02-43-26](https://github.com/user-attachments/assets/8292ccc4-9821-4f80-9b71-fef15f56a2aa)
 ![Screenshot from 2025-03-02 23-56-02](https://github.com/user-attachments/assets/2bb25379-cfa7-4160-941b-7257d8009701)
 ![Screenshot from 2025-03-02 23-55-55](https://github.com/user-attachments/assets/d8e22465-2324-4e1f-a076-0fef35c6861f)
+![Screenshot from 2025-03-26 02-43-37](https://github.com/user-attachments/assets/d6522b77-510a-4419-a385-5356e2e9f821)
+![Screenshot from 2025-03-26 02-43-26](https://github.com/user-attachments/assets/8292ccc4-9821-4f80-9b71-fef15f56a2aa)
 
 ---
 
@@ -64,14 +64,18 @@ npm run dev
 cd ../client
 npm start
 
+---
+
 🧪 Usage
 
 Teacher opens the app and creates a session.
 Students join the session using the room ID.
-Live sync begins:
+Live sync begins
 Teacher’s editor is broadcasted.
 Students work privately.
 Teacher can view/edit student code on click.
+
+---
 
 🧠 Architecture
 
@@ -83,6 +87,8 @@ Client (Teacher & Students)
        |
    Code Sync & Session Logic
 
+---
+
 💡 Future Enhancements:
 
 Syntax highlighting for multiple languages
@@ -91,6 +97,8 @@ Video/audio call integration
 Role-based login with authentication
 Save session history or export code
 
+---
+
 🙌 Acknowledgements:
 
 Socket.IO
@@ -98,11 +106,17 @@ Monaco Editor
 React
 Tailwind CSS
 
+---
+
 📄 License
 This project is licensed under the MIT License.
 Feel free to fork, modify, and contribute!
+
+---
 
 🔗 Connect
 Made with ❤️ by Ayush Mishra
 📧 mishrayush.28@gmail.com
 🌐 ayush-mishra-b13353265
+
+---
